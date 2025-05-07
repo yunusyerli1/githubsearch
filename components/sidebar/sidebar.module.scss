@@ -1,0 +1,49 @@
+@use '../../styles/1-helpers/variables' as *;
+
+.sidebar-container {
+  position: fixed;
+  background-color: #fff;
+  height: 100vh;
+  width: $sidebar-width;
+  color: red;
+
+  .sidebar-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-image: url('../../public/card-moneytolia.png');
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .active-link {
+    color: $orange;
+    
+    img {
+      filter: invert(48%) sepia(79%) saturate(2479%) hue-rotate(346deg) brightness(104%) contrast(101%);
+    }
+  }
+
+  .social-media-section {
+    position: absolute;
+    bottom: 2rem;
+  }
+
+  a {
+    color: $primary;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: $secondary;
+
+      img {
+        filter: invert(24%) sepia(98%) saturate(1824%) hue-rotate(213deg) brightness(101%) contrast(101%);
+      }
+    }
+
+    img {
+      transition: all 0.3s ease;
+    }
+  }
+}

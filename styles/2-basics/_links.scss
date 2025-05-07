@@ -1,0 +1,28 @@
+@use '../1-helpers/variables' as variables;
+a {
+  text-decoration: none;
+  color: variables.$primary;
+}
+
+a.clickable {
+  color: variables.$secondary;
+  cursor: pointer;
+}
+
+a.clickable:hover {
+  color: variables.$secondary;
+  text-decoration: underline;
+}
+
+ul {
+  list-style-type: none;
+  padding-inline-start: 1em;
+}
+
+ul li::marker {
+  color: variables.$secondary;
+}
+
+.cpointer {
+  cursor: pointer;
+}
