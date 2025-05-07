@@ -1,0 +1,24 @@
+.button-sidebar {
+  position: absolute;
+  opacity: 0.3;
+  padding: 0 12px;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+.button-sidebar-expanded {
+  top: 1rem;
+  left: 14rem;
+  transform: rotate(270deg);
+}
+
+.button-sidebar-collapsed {
+  top: 1rem;
+  left: -0.6rem;
+  transform: rotate(90deg);
+} 

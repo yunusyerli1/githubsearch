@@ -7,6 +7,7 @@ import classes from './layout.module.scss';
 import { INavbarModel } from '@/lib/models/INavbarModel';
 import Navbar from '@/components/navbar/navbar';
 import Sidebar from '@/components/sidebar/sidebar';
+import Image from 'next/image';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
@@ -29,6 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Sidebar navItems={sideMenu} />
           </div>
           <div className="container" style={{ overflowX: 'hidden' }}>
+            <button className={`${classes['button-sidebar-expanded']} d-none btn btn-secondary  d-md-block`}>
+              <Image src="/svg/menu-duo-lg.svg" alt="logo" width={18} height={18} />
+            </button>
             <div className="row mt-3">
               <Navbar navItems={menuItems} />
 
