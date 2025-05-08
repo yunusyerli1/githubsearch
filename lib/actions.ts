@@ -1,15 +1,20 @@
 'use server';
 
 export async function createCampaign(previousState: any, formData: FormData): Promise<any> {
-  const title = formData.get("title");
-  const description = formData.get("description");
+  try {
+    const campaignData = {
+      id: crypto.randomUUID(),
+      title: formData.get("title"),
+      description: formData.get("description"),
+      points: 0, 
+      createdAt: new Date().toISOString()
+    };
 
- 
+    console.log("Campaign Data:", campaignData);
 
-  console.log("previousState",title);
-    console.log("title",title);
-    console.log("description",description);
-
-
-return { message: "Campaign created successfully!" };
+    return { message: "Campaign created successfully!" };
+  } catch (error) {
+    console.error("Error creating campaign:", error);
+    return { message: "Failed to create campaign" };
+  }
 }
