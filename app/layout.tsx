@@ -1,47 +1,18 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
 import '@/styles/main.scss';
-import BootstrapClient from '@/lib/utils/bootstrapClient';
-import classes from './layout.module.scss';
-
-import { INavbarModel } from '@/lib/models/INavbarModel';
-import Navbar from '@/components/navbar/navbar';
-import Sidebar from '@/components/sidebar/sidebar';
-import Image from 'next/image';
+import LayoutWrapper from '@/containers/layout-wrapper/layout-wrapper';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-
-  const sideMenu: INavbarModel[] = [
-    { title: "Campaigns", icon: "megaphone-line", route: "/" },
-    { title: "Create Campaigns", icon: "add-circle-line", route: "/create" },
-  ];
-
-  const menuItems: INavbarModel[] = [
-    { title: "Campaigns", route: "/", isFeatured: false },
-    { title: "Create", route: "/create", isFeatured: false },
-    { title: "Logout", route: "/logout", isFeatured: true },
-  ];
 
   return (
     <html lang="en">
       <body >
-        <div className={classes.main}>
-          <div className="d-none d-md-block sidebar">
-            <Sidebar navItems={sideMenu} />
-          </div>
-          <div className="container" style={{ overflowX: 'hidden' }}>
-            <button className={`${classes['button-sidebar-expanded']} d-none btn btn-secondary  d-md-block`}>
-              <Image src="/svg/menu-duo-lg.svg" alt="logo" width={18} height={18} />
-            </button>
-            <div className="row mt-3">
-              <Navbar navItems={menuItems} />
-
-            </div>
-            {children}
-            <BootstrapClient />
-          </div>
-        </div>
-
+        <LayoutWrapper>
+          {children}
+        </LayoutWrapper>
+           
+         
       </body>
     </html>
   );

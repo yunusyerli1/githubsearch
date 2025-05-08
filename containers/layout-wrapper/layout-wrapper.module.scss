@@ -1,7 +1,7 @@
-@use '../styles/1-helpers/variables' as *;
+@use '../../styles/1-helpers/variables' as *;
 
 .main {
-  background-image: url("../public/bg-home.jpg");
+  background-image: url("../../public/bg-home.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -16,6 +16,10 @@
     padding: 0 12px;
     border-radius: 4px 4px 0 0;
     cursor: pointer;
+
+    img {
+      filter: brightness(0) invert(1);
+    }
   }
 
   .button-sidebar-collapsed {
@@ -27,6 +31,10 @@
     padding: 0 12px;
     border-radius: 4px 4px 0 0;
     cursor: pointer;
+
+    img {
+      filter: brightness(0) invert(1);
+    }
   }
 }
 
