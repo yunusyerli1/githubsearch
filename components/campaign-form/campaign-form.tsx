@@ -1,8 +1,9 @@
 'use client';
-import { createCampaign } from "@/lib/actions";
+
 import { useActionState } from "react";
 import SubmitButton from "../submitButton";
 import classes from './campaign-form.module.scss';
+import { createCampaign } from "@/lib/actions/campaign.actions";
 
 export default function CampaignForm() {
     const [state, formAction] = useActionState(createCampaign, { message: null });

@@ -1,8 +1,11 @@
 import CampaignForm from "@/components/campaign-form/campaign-form";
+import { getCampaigns } from "@/lib/services/campaign.db";
 
-export default function CreateCampaignsPage() {
+export default async function CreateCampaignsPage() {
 
-  
+  const campaigns = await getCampaigns();
+
+  //console.log(campaigns);
 
   return (
     <div className="container mt-5">
