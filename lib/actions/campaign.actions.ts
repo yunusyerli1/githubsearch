@@ -43,7 +43,8 @@ export async function editCampaign(item: any) {
   };
   console.log("Editing item:", newItem);
   // Add your edit logic here
-  return newItem;
+ 
+  return { newItem, showDialog: true };
 }
 
 export async function deleteCampaign(item: any) {

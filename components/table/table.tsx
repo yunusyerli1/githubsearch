@@ -15,7 +15,8 @@ export function Table({ config }: { config: ITableConfig }) {
     setError(null);
 
     try {
-      await action(item);
+      const result = await action(item);
+      
     } catch (err) {
       setError('An error occurred while processing your request');
       console.error('Error executing action:', err);
