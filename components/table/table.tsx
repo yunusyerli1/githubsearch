@@ -1,7 +1,7 @@
 'use client';
 import { ITableConfig } from '@/lib/hooks/useTable';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 export function Table({ config }: { config: ITableConfig }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,6 +9,16 @@ export function Table({ config }: { config: ITableConfig }) {
   const [sortField, setSortField] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [sortedRecords, setSortedRecords] = useState(config.records);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 15;
+
+  // Calculate pagination values
+  const totalPages = Math.ceil(sortedRecords.length / recordsPerPage);
+  const startIndex = (currentPage - 1) * recordsPerPage;
+  const endIndex = startIndex + recordsPerPage;
+  const currentRecords = useMemo(() => {
+    return sortedRecords.slice(startIndex, endIndex);
+  }, [sortedRecords, startIndex, endIndex]);
 
   async function handleAction(action: Function, item: any, e: React.MouseEvent) {
     e.preventDefault();
@@ -101,107 +111,148 @@ export function Table({ config }: { config: ITableConfig }) {
   return (
     <>
       {sortedRecords.length ? (
-        <table className="table table-hover scroll fs-14" id="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              {config.titles.map((title: string) => (
-                <th 
-                  scope="col" 
-                  key={title}
-                  className="cpointer"
-                >
-                  <div className="d-flex align-items-center gap-1">
-                    {title}
-                    <div className="d-flex">
-                      <a onClick={(e) => {
-                        e.stopPropagation();
-                        handleSort(title, 'asc');
-                      }}>
-                        <Image 
-                          src="/svg/arrow-up-long-fill.svg" 
-                          alt="arrow-up-line" 
-                          width={10} 
-                          height={14}
-                          style={getSortIconStyle(title, 'asc')}
-                        />
-                      </a>
-                      <a onClick={(e) => {
-                        e.stopPropagation();
-                        handleSort(title, 'desc');
-                      }}>
-                        <Image 
-                          src="/svg/arrow-down-long-line.svg" 
-                          alt="arrow-down-line" 
-                          width={10} 
-                          height={14}
-                          style={getSortIconStyle(title, 'desc')}
-                        />
-                      </a>
+        <>
+          <table className="table table-hover scroll fs-14" id="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                {config.titles.map((title: string) => (
+                  <th 
+                    scope="col" 
+                    key={title}
+                  >
+                    <div className="d-flex align-items-center gap-1">
+                      {title}
+                      <div className="d-flex">
+                        <a onClick={(e) => {
+                          e.stopPropagation();
+                          handleSort(title, 'asc');
+                        }}>
+                          <Image 
+                            src="/svg/arrow-up-long-fill.svg" 
+                            alt="arrow-up-line" 
+                            width={10} 
+                            height={14}
+                            style={getSortIconStyle(title, 'asc')}
+                          />
+                        </a>
+                        <a onClick={(e) => {
+                          e.stopPropagation();
+                          handleSort(title, 'desc');
+                        }}>
+                          <Image 
+                            src="/svg/arrow-down-long-line.svg" 
+                            alt="arrow-down-line" 
+                            width={10} 
+                            height={14}
+                            style={getSortIconStyle(title, 'desc')}
+                          />
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                </th>
-              ))}
-              {config.actions && <th scope="col">Actions</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedRecords.map((record: any, index: number) => (
-              <tr key={record.id}>
-                <td>{index + 1}</td>
-                {config.titles?.map((header: string) => {
-                  const headerKey = header.toLowerCase();
-                  const cellValue = record[headerKey];
+                  </th>
+                ))}
+                {config.actions && <th scope="col">Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {currentRecords.map((record: any, index: number) => (
+                <tr key={record.id}>
+                  <td>{startIndex + index + 1}</td>
+                  {config.titles?.map((header: string) => {
+                    const headerKey = header.toLowerCase();
+                    const cellValue = record[headerKey];
 
-                  return (
-                    <td key={`${record.id}-${headerKey}`}>
-                      {cellValue && typeof cellValue === 'object' && 'actions' in cellValue
-                        ? <>{cellValue.value} {cellValue.actions.map((action: any) => {
-                          return (
-                            <a 
-                              key={action.actionName} 
-                              className='secondary-hover cpointer' 
+                    return (
+                      <td key={`${record.id}-${headerKey}`}>
+                        {cellValue && typeof cellValue === 'object' && 'actions' in cellValue
+                          ? <>{cellValue.value} {cellValue.actions.map((action: any) => {
+                            return (
+                              <a 
+                                key={action.actionName} 
+                                className='secondary-hover cpointer' 
+                                onClick={(e) => handleAction(action.function, record, e)}
+                              >
+                                <Image key={action.actionName} src={`/svg/${action.iconName}.svg`} alt={action.actionName} width={18} height={18} />
+                              </a>
+                            )
+                          })}</>
+                          : cellValue
+                        }
+                      </td>
+                    );
+                  })}
+                  {config.actions && (
+                    <td>
+                      <div className="d-flex gap-2">
+                        {config.actions.map((action: any) => (
+                          isLoading ? (
+                            <div key={`${action.actionName}-spinner`} className="spinner-border spinner-border-sm" role="status">
+                              <span className="visually-hidden">Loading...</span>
+                            </div>
+                          ) : (
+                            <a
+                              key={action.actionName}
+                              className='secondary-hover cpointer'
                               onClick={(e) => handleAction(action.function, record, e)}
                             >
-                              <Image key={action.actionName} src={`/svg/${action.iconName}.svg`} alt={action.actionName} width={18} height={18} />
+                              <Image
+                                src={`/svg/${action.iconName}.svg`}
+                                alt={action.actionName}
+                                width={18}
+                                height={18}
+                              />
                             </a>
                           )
-                        })}</>
-                        : cellValue
-                      }
+                        ))}
+                      </div>
                     </td>
-                  );
-                })}
-                {config.actions && (
-                  <td>
-                    <div className="d-flex gap-2">
-                      {config.actions.map((action: any) => (
-                        isLoading ? (
-                          <div key={`${action.actionName}-spinner`} className="spinner-border spinner-border-sm" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                          </div>
-                        ) : (
-                          <a
-                            key={action.actionName}
-                            className='secondary-hover cpointer'
-                            onClick={(e) => handleAction(action.function, record, e)}
-                          >
-                            <Image
-                              src={`/svg/${action.iconName}.svg`}
-                              alt={action.actionName}
-                              width={18}
-                              height={18}
-                            />
-                          </a>
-                        )
-                      ))}
-                    </div>
-                  </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          
+          {/* Pagination Controls */}
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              Showing {startIndex + 1} to {Math.min(endIndex, sortedRecords.length)} of {sortedRecords.length} entries
+            </div>
+            <div className="d-flex gap-2">
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+              >
+                First
+              </button>
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span className="px-3 py-2">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+              >
+                Last
+              </button>
+            </div>
+          </div>
+        </>
       ) : (
         <div>No campaigns found</div>
       )}
