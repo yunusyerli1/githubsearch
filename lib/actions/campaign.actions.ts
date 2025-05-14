@@ -36,7 +36,7 @@ export async function createCampaign(previousState: any, formData: FormData): Pr
 }
 
 export async function editCampaign(item: any) {
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  //await new Promise(resolve => setTimeout(resolve, 2000));
   const newItem = {
     ...item,
     points: item.points.value ?? item.point
@@ -61,8 +61,8 @@ export async function deleteCampaign(item: any) {
   }
 }
 
+
 export async function increasePoints(campaign: ITableCampaignModel): Promise<void> {
-  console.log("campaign:", campaign);
   const updatedCampaign = {
     ...campaign,
     points: campaign.points.value + 1

@@ -1,38 +1,43 @@
 'use client';
 import { ITableConfig } from '@/lib/hooks/useTable';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/lib/store/store';
+import {
+  setCurrentPage,
+  setSortField,
+  setSortDirection,
+  setLoading,
+  setError,
+} from '@/lib/store/features/tableSlice';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
 
 export function Table({ config }: { config: ITableConfig }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<string>('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [sortedRecords, setSortedRecords] = useState(config.records);
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 15;
+  const dispatch = useDispatch();
+  const {
+    currentPage,
+    sortField,
+    sortDirection,
+    isLoading,
+    error,
+    recordsPerPage,
+  } = useSelector((state: RootState) => state.table);
 
-  // Calculate pagination values
-  const totalPages = Math.ceil(sortedRecords.length / recordsPerPage);
-  const startIndex = (currentPage - 1) * recordsPerPage;
-  const endIndex = startIndex + recordsPerPage;
-  const currentRecords = useMemo(() => {
-    return sortedRecords.slice(startIndex, endIndex);
-  }, [sortedRecords, startIndex, endIndex]);
+  const [sortedRecords, setSortedRecords] = useState(config.records);
 
   async function handleAction(action: Function, item: any, e: React.MouseEvent) {
     e.preventDefault();
     if (isLoading) return;
 
-    setIsLoading(true);
-    setError(null);
+    dispatch(setLoading(true));
+    dispatch(setError(null));
 
     try {
-      const result = await action(item);
+      await action(item);
     } catch (err) {
-      setError('An error occurred while processing your request');
+      dispatch(setError('An error occurred while processing your request'));
     } finally {
-      setIsLoading(false);
+      dispatch(setLoading(false));
     }
   }
 
@@ -40,16 +45,16 @@ export function Table({ config }: { config: ITableConfig }) {
     // If clicking the same field and direction, toggle
     if (field === sortField && direction === sortDirection) {
       const newDirection = direction === 'asc' ? 'desc' : 'asc';
-      setSortDirection(newDirection);
+      dispatch(setSortDirection(newDirection));
     } 
     // If clicking the same field but different direction, just update direction
     else if (field === sortField) {
-      setSortDirection(direction);
+      dispatch(setSortDirection(direction));
     }
     // If clicking a different field, set new field and direction
     else {
-      setSortField(field);
-      setSortDirection(direction);
+      dispatch(setSortField(field));
+      dispatch(setSortDirection(direction));
     }
 
     // Use the new values directly for sorting
@@ -107,6 +112,14 @@ export function Table({ config }: { config: ITableConfig }) {
       cursor: 'pointer'
     };
   };
+
+  // Calculate pagination values
+  const totalPages = Math.ceil(sortedRecords.length / recordsPerPage);
+  const startIndex = (currentPage - 1) * recordsPerPage;
+  const endIndex = startIndex + recordsPerPage;
+  const currentRecords = useMemo(() => {
+    return sortedRecords.slice(startIndex, endIndex);
+  }, [sortedRecords, startIndex, endIndex]);
 
   return (
     <>
@@ -221,14 +234,14 @@ export function Table({ config }: { config: ITableConfig }) {
             <div className="d-flex gap-2">
               <button
                 className="btn btn-sm btn-outline-secondary"
-                onClick={() => setCurrentPage(1)}
+                onClick={() => dispatch(setCurrentPage(1))}
                 disabled={currentPage === 1}
               >
                 First
               </button>
               <button
                 className="btn btn-sm btn-outline-secondary"
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => dispatch(setCurrentPage(Math.max(currentPage - 1, 1)))}
                 disabled={currentPage === 1}
               >
                 Previous
@@ -238,14 +251,14 @@ export function Table({ config }: { config: ITableConfig }) {
               </span>
               <button
                 className="btn btn-sm btn-outline-secondary"
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() => dispatch(setCurrentPage(Math.min(currentPage + 1, totalPages)))}
                 disabled={currentPage === totalPages}
               >
                 Next
               </button>
               <button
                 className="btn btn-sm btn-outline-secondary"
-                onClick={() => setCurrentPage(totalPages)}
+                onClick={() => dispatch(setCurrentPage(totalPages))}
                 disabled={currentPage === totalPages}
               >
                 Last
