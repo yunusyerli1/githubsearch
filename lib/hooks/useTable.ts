@@ -73,6 +73,5 @@ export function useTable(campaigns: ICampaign[]): ITableConfig {
       }
     })),
     actions: getTableRowActions()
-    //actions: []
   };
 } 
