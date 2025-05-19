@@ -10,7 +10,9 @@ import {
   setError,
 } from '@/lib/store/features/tableSlice';
 import Image from 'next/image';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { openModal } from '@/lib/store/features/modalSlice';
+import { setCampaigns } from '@/lib/store/features/campaignSlice';
 
 export function Table({ config }: { config: ITableConfig }) {
   const dispatch = useDispatch();
@@ -25,6 +27,26 @@ export function Table({ config }: { config: ITableConfig }) {
 
   const [sortedRecords, setSortedRecords] = useState(config.records);
 
+  useEffect(() => {
+    // Clean the campaign data by removing non-serializable parts
+    const cleanCampaigns = config.records.map(campaign => {
+      const cleanCampaign = { ...campaign };
+      if (cleanCampaign.points && cleanCampaign.points.actions) {
+        // Create a new points object without the function references
+        cleanCampaign.points = {
+          ...cleanCampaign.points,
+          actions: cleanCampaign.points.actions.map((action: { actionName: string; iconName: string }) => ({
+            actionName: action.actionName,
+            iconName: action.iconName
+          }))
+        };
+      }
+      return cleanCampaign;
+    });
+    
+    dispatch(setCampaigns(cleanCampaigns));
+  }, [dispatch, config.records]);
+
   async function handleAction(action: Function, item: any, e: React.MouseEvent) {
     e.preventDefault();
     if (isLoading) return;
@@ -33,7 +55,19 @@ export function Table({ config }: { config: ITableConfig }) {
     dispatch(setError(null));
 
     try {
-      await action(item);
+      const result = await action(item);
+      if (result.showDialog) {
+        console.log("result:", result);
+        dispatch(openModal({
+          title: "Edit Campaign",
+          contentType: "CampaignForm",
+          contentProps: { campaign: result.newItem }, 
+          modalType: "Update"
+        }));
+      } else if (result.success) {
+        // If it's a successful delete, refresh the page
+        window.location.reload();
+      }
     } catch (err) {
       dispatch(setError('An error occurred while processing your request'));
     } finally {
@@ -46,7 +80,7 @@ export function Table({ config }: { config: ITableConfig }) {
     if (field === sortField && direction === sortDirection) {
       const newDirection = direction === 'asc' ? 'desc' : 'asc';
       dispatch(setSortDirection(newDirection));
-    } 
+    }
     // If clicking the same field but different direction, just update direction
     else if (field === sortField) {
       dispatch(setSortDirection(direction));
@@ -59,7 +93,7 @@ export function Table({ config }: { config: ITableConfig }) {
 
     // Use the new values directly for sorting
     const newSortField = field;
-    const newSortDirection = field === sortField && direction === sortDirection 
+    const newSortDirection = field === sortField && direction === sortDirection
       ? (direction === 'asc' ? 'desc' : 'asc')
       : direction;
 
@@ -77,21 +111,21 @@ export function Table({ config }: { config: ITableConfig }) {
 
       // Handle string sorting
       if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return newSortDirection === 'asc' 
+        return newSortDirection === 'asc'
           ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       }
 
       // Handle number sorting
       if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return newSortDirection === 'asc' 
+        return newSortDirection === 'asc'
           ? aValue - bValue
           : bValue - aValue;
       }
 
       // Handle object with value property (like points)
       if (aValue && typeof aValue === 'object' && 'value' in aValue &&
-          bValue && typeof bValue === 'object' && 'value' in bValue) {
+        bValue && typeof bValue === 'object' && 'value' in bValue) {
         return newSortDirection === 'asc'
           ? aValue.value - bValue.value
           : bValue.value - aValue.value;
@@ -106,7 +140,7 @@ export function Table({ config }: { config: ITableConfig }) {
   const getSortIconStyle = (field: string, iconType: 'asc' | 'desc') => {
     const isActive = sortField.toLowerCase() === field.toLowerCase();
     const isActiveIcon = sortDirection === iconType;
-    
+
     return {
       opacity: isActive && isActiveIcon ? 1 : 0.3,
       cursor: 'pointer'
@@ -130,8 +164,8 @@ export function Table({ config }: { config: ITableConfig }) {
               <tr>
                 <th scope="col">#</th>
                 {config.titles.map((title: string) => (
-                  <th 
-                    scope="col" 
+                  <th
+                    scope="col"
                     key={title}
                   >
                     <div className="d-flex align-items-center gap-1">
@@ -141,10 +175,10 @@ export function Table({ config }: { config: ITableConfig }) {
                           e.stopPropagation();
                           handleSort(title, 'asc');
                         }}>
-                          <Image 
-                            src="/svg/arrow-up-long-fill.svg" 
-                            alt="arrow-up-line" 
-                            width={10} 
+                          <Image
+                            src="/svg/arrow-up-long-fill.svg"
+                            alt="arrow-up-line"
+                            width={10}
                             height={14}
                             style={getSortIconStyle(title, 'asc')}
                           />
@@ -153,10 +187,10 @@ export function Table({ config }: { config: ITableConfig }) {
                           e.stopPropagation();
                           handleSort(title, 'desc');
                         }}>
-                          <Image 
-                            src="/svg/arrow-down-long-line.svg" 
-                            alt="arrow-down-line" 
-                            width={10} 
+                          <Image
+                            src="/svg/arrow-down-long-line.svg"
+                            alt="arrow-down-line"
+                            width={10}
                             height={14}
                             style={getSortIconStyle(title, 'desc')}
                           />
@@ -181,9 +215,9 @@ export function Table({ config }: { config: ITableConfig }) {
                         {cellValue && typeof cellValue === 'object' && 'actions' in cellValue
                           ? <>{cellValue.value} {cellValue.actions.map((action: any) => {
                             return (
-                              <a 
-                                key={action.actionName} 
-                                className='secondary-hover cpointer' 
+                              <a
+                                key={action.actionName}
+                                className='secondary-hover cpointer'
                                 onClick={(e) => handleAction(action.function, record, e)}
                               >
                                 <Image key={action.actionName} src={`/svg/${action.iconName}.svg`} alt={action.actionName} width={18} height={18} />
@@ -225,7 +259,7 @@ export function Table({ config }: { config: ITableConfig }) {
               ))}
             </tbody>
           </table>
-          
+
           {/* Pagination Controls */}
           <div className="d-flex justify-content-between align-items-center mt-3">
             <div>

@@ -3,43 +3,43 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ModalState {
   isOpen: boolean;
   title: string;
-  content: React.ReactNode;
-  onClose: () => void;
-  onConfirm: () => void;
+  contentType: string | null; // Instead of ReactNode
+  contentProps: any; // Props for the component
+  modalType?: string;
 }
 
 interface OpenModalPayload {
   title: string;
-  content: React.ReactNode;
-  onClose: () => void;
-  onConfirm: () => void;
+  contentType: string;
+  contentProps: any;
+  modalType?: string;
 }
 
 const initialState: ModalState = {
   isOpen: false,
   title: '',
-  content: null,
-  onClose: () => {},
-  onConfirm: () => {},
+  contentType: null,
+  contentProps: null,
+  modalType: undefined,
 };
 
 const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    openModal: (state, action: PayloadAction<OpenModalPayload>) => {
+    openModal: (state: ModalState, action: PayloadAction<OpenModalPayload>) => {
       state.isOpen = true;
       state.title = action.payload.title;
-      state.content = action.payload.content;
-      state.onClose = action.payload.onClose;
-      state.onConfirm = action.payload.onConfirm;
+      state.contentType = action.payload.contentType;
+      state.contentProps = action.payload.contentProps;
+      state.modalType = action.payload.modalType;
     },
-    closeModal: (state) => {
+    closeModal: (state: ModalState) => {
       state.isOpen = false;
       state.title = '';
-      state.content = null;
-      state.onClose = () => {};
-      state.onConfirm = () => {};
+      state.contentType = null;
+      state.contentProps = null;
+      state.modalType = undefined;
     },
   },
 });

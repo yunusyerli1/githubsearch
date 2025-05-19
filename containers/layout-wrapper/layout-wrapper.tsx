@@ -6,11 +6,16 @@ import Image from 'next/image';
 import classes from './layout-wrapper.module.scss';
 import BootstrapClient from "@/lib/utils/bootstrapClient";
 import { useState } from "react";
-
+import DialogModal from "@/components/modal/dialogModal";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from '@/lib/store/store';
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const dispatch = useDispatch();
+  const { isOpen} = useSelector((state: RootState) => state.modal);
 
     const sideMenu: INavbarModel[] = [
       { title: "Campaigns", icon: "megaphone-line", route: "/" },
@@ -26,7 +31,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     function toggleSidebar() {
       setIsSidebarCollapsed(!isSidebarCollapsed);
     }
-
 
     return (
         <div className={`${classes.main} ${isSidebarCollapsed ? classes['grid-container-full'] : classes['grid-container']}`}>
@@ -46,6 +50,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
             </div>
             {children}
             <BootstrapClient />
+            {isOpen && <DialogModal />}
           </div>
         </div>
     )

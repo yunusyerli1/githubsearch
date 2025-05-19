@@ -9,10 +9,12 @@ import {
 } from '../services/campaign.db';
 
 export async function createCampaign(previousState: any, formData: FormData): Promise<any> {
+  
   try {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
-
+    console.log("title", title);
+    console.log("description", description);
     if (!title || !description) {
       return { message: "Title and description are required" };
     }
@@ -33,6 +35,25 @@ export async function createCampaign(previousState: any, formData: FormData): Pr
     console.error("Error creating campaign:", error);
     return { message: "Failed to create campaign. Please try again." };
   }
+}
+
+export async function updateCampaign(previousState: any, formData: FormData) {
+  console.log("formData", formData);
+  console.log("previousState", previousState);
+  const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    if (!title || !description) {
+      return { message: "Title and description are required" };
+    }
+    const updatedCampaign = {
+      ...previousState,
+      title,
+      description
+    };
+    console.log("updatedCampaign", updatedCampaign);
+    await updateCampaignService(updatedCampaign);
+    revalidatePath('/');
+    return { message: "Campaign updated successfully!", campaign: updatedCampaign };
 }
 
 export async function editCampaign(item: any) {

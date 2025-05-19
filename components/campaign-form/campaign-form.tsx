@@ -3,10 +3,27 @@
 import { useActionState } from "react";
 import SubmitButton from "../submitButton";
 import classes from './campaign-form.module.scss';
-import { createCampaign } from "@/lib/actions/campaign.actions";
+import { createCampaign, updateCampaign } from "@/lib/actions/campaign.actions";
+import { ICampaign } from "@/lib/models/ICampaign";
+import { useDispatch } from "react-redux";
+import { closeModal } from "@/lib/store/features/modalSlice";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default function CampaignForm() {
-    const [state, formAction] = useActionState(createCampaign, { message: null });
+export default function CampaignForm({ campaign }: { campaign: ICampaign }) {
+    const dispatch = useDispatch();
+    const router = useRouter();
+    let action = campaign ? updateCampaign : createCampaign;
+    
+    const [state, formAction] = useActionState(action, campaign ? campaign : { message: null });
+
+    useEffect(() => {
+        if (state.message) {
+            dispatch(closeModal());
+            window.location.reload();
+        }
+    }, [state.message, dispatch]);
+
     return (
 
         <form action={formAction}>
@@ -15,9 +32,14 @@ export default function CampaignForm() {
             <div className="row">
                 <div className="col-12">
                     <div className="form-floating">
-                        <input type="text" id="title" className="form-control" name="title" />
+                        <input 
+                            type="text" 
+                            id="title" 
+                            className="form-control" 
+                            name="title" 
+                            defaultValue={campaign?.title || ''}
+                        />
                         <label htmlFor="title">Title</label>
-
                     </div>
                 </div>
             </div>
@@ -25,8 +47,14 @@ export default function CampaignForm() {
             <div className="row ">
                 <div className="col-12">
                     <div className="form-floating">
-                        <textarea name="description" className="form-control pb-3" placeholder="Leave a comment here"
-                            id="description" style={{ height: "100px" }}></textarea>
+                        <textarea 
+                            name="description" 
+                            className="form-control pb-3" 
+                            placeholder="Leave a comment here"
+                            id="description" 
+                            style={{ height: "100px" }}
+                            defaultValue={campaign?.description || ''}
+                        ></textarea>
                         <label htmlFor="description">Your thoughts...</label>
                     </div>
                 </div>
