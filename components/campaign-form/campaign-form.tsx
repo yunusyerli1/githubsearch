@@ -20,7 +20,6 @@ export default function CampaignForm({ campaign }: { campaign: ICampaign }) {
     useEffect(() => {
         if (state.message) {
             dispatch(closeModal());
-            window.location.reload();
         }
     }, [state.message, dispatch]);
 

@@ -25,7 +25,8 @@ export function Table({ config }: { config: ITableConfig }) {
     recordsPerPage,
   } = useSelector((state: RootState) => state.table);
 
-  const [sortedRecords, setSortedRecords] = useState(config.records);
+  const campaigns = useSelector((state: RootState) => state.campaign.campaigns);
+  const [sortedRecords, setSortedRecords] = useState(campaigns);
 
   useEffect(() => {
     // Clean the campaign data by removing non-serializable parts
@@ -46,6 +47,10 @@ export function Table({ config }: { config: ITableConfig }) {
     
     dispatch(setCampaigns(cleanCampaigns));
   }, [dispatch, config.records]);
+
+  useEffect(() => {
+    setSortedRecords(campaigns);
+  }, [campaigns]);
 
   async function handleAction(action: Function, item: any, e: React.MouseEvent) {
     e.preventDefault();

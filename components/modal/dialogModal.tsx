@@ -11,9 +11,6 @@ export default function DialogModal() {
   const dispatch = useDispatch();
   const { isOpen, title, contentType, contentProps } = useSelector((state: RootState) => state.modal);
 
-  console.log(contentType);
-  console.log(contentProps);
-
   function handleHide() {
     dispatch(closeModal());
   }

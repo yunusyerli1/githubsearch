@@ -13,8 +13,6 @@ export async function createCampaign(previousState: any, formData: FormData): Pr
   try {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
-    console.log("title", title);
-    console.log("description", description);
     if (!title || !description) {
       return { message: "Title and description are required" };
     }
