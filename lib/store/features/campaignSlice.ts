@@ -25,29 +25,14 @@ const campaignSlice = createSlice({
     },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
-    },
-    addCampaign: (state, action: PayloadAction<ICampaign>) => {
-      state.campaigns.push(action.payload);
-    },
-    updateCampaign: (state, action: PayloadAction<ICampaign>) => {
-      const index = state.campaigns.findIndex(c => c.id === action.payload.id);
-      if (index !== -1) {
-        state.campaigns[index] = action.payload;
-      }
-    },
-    deleteCampaign: (state, action: PayloadAction<number>) => {
-      state.campaigns = state.campaigns.filter(c => c.id !== action.payload);
-    },
+    }
   },
 });
 
 export const { 
   setCampaigns, 
   setLoading, 
-  setError,
-  addCampaign,
-  updateCampaign,
-  deleteCampaign
+  setError
 } = campaignSlice.actions;
 
 export default campaignSlice.reducer; 
