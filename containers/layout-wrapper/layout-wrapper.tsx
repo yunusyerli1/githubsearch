@@ -20,6 +20,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     const sideMenu: INavbarModel[] = [
       { title: "Campaigns", icon: "megaphone-line", route: "/" },
       { title: "Create Campaigns", icon: "add-circle-line", route: "/create" },
+      { title: "Github List", icon: "add-circle-line", route: "/list" },
     ];
   
     const menuItems: INavbarModel[] = [

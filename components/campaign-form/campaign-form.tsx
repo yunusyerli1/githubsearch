@@ -8,11 +8,9 @@ import { ICampaign } from "@/lib/models/ICampaign";
 import { useDispatch } from "react-redux";
 import { closeModal } from "@/lib/store/features/modalSlice";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
-export default function CampaignForm({ campaign }: { campaign: ICampaign }) {
+export default function CampaignForm({ campaign }: { campaign?: ICampaign }) {
     const dispatch = useDispatch();
-    const router = useRouter();
     let action = campaign ? updateCampaign : createCampaign;
     
     const [state, formAction] = useActionState(action, campaign ? campaign : { message: null });

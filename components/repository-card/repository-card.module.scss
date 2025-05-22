@@ -1,0 +1,100 @@
+.repository-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  
+  .repository-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .repository-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .repository-info {
+    flex: 1;
+  }
+  
+  .repository-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  .repository-link {
+    color: #0366d6;
+    text-decoration: none;
+  }
+  
+  .repository-link:hover {
+    text-decoration: underline;
+  }
+  
+  .owner {
+    margin: 0.25rem 0 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .owner-link {
+    color: #666;
+    text-decoration: none;
+  }
+  
+  .owner-link:hover {
+    color: #0366d6;
+    text-decoration: underline;
+  }
+  
+  .description {
+    color: #444;
+    margin: 1rem 0;
+    line-height: 1.4;
+    font-size: 0.95rem;
+  }
+  
+  .repository-stats {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+    align-items: center;
+  }
+  
+  .language {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .language-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #f1e05a;
+    display: inline-block;
+  }
+  
+  .stars {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .star-icon {
+    font-size: 1rem;
+  }
