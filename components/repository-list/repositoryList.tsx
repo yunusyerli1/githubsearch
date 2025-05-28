@@ -27,7 +27,6 @@ export default function RepositoryList({ repositories, isLoading }: RepositoryLi
 
     const totalPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : 0;
 
-    console.log("repositories", repositories);
     const handlePageChange = (page: number) => {
         dispatch(setCurrentPage(page));
     };

@@ -9,7 +9,11 @@ import { useDispatch } from "react-redux";
 import { closeModal } from "@/lib/store/features/modalSlice";
 import { useEffect } from "react";
 
-export default function CampaignForm({ campaign }: { campaign?: ICampaign }) {
+interface CampaignFormProps {
+    campaign?: ICampaign;
+}
+
+export default function CampaignForm({ campaign }: CampaignFormProps) {
     const dispatch = useDispatch();
     let action = campaign ? updateCampaign : createCampaign;
     

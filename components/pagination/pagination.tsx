@@ -1,6 +1,12 @@
 import classes from './pagination.module.scss';
 
-export default function RepositoryList({ currentPage, totalPages, onPageChange }: { currentPage: number, totalPages: number, onPageChange: (page: number) => void }) {
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+export default function RepositoryList({ currentPage, totalPages, onPageChange }: PaginationProps) {
 
     const maxVisiblePages = 5;
     const halfVisible = Math.floor(maxVisiblePages / 2);
@@ -16,8 +22,6 @@ export default function RepositoryList({ currentPage, totalPages, onPageChange }
       { length: endPage - startPage + 1 },
       (_, i) => startPage + i
     );
-
-    console.log("Rendering Pagination");
 
     return (
         <div className={classes['pagination']}>

@@ -15,9 +15,6 @@ export default function RepositoryDetails () {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    console.log("params", params);
-    console.log("searchParams", searchParams);
-
     useEffect(() => {
         async function fetchRepository() {
             try {
@@ -25,7 +22,6 @@ export default function RepositoryDetails () {
                 if (repoData) {
                     try {
                         const decodedData = JSON.parse(decodeURIComponent(repoData));
-                        console.log(decodedData);
                         setRepository(decodedData);
                         setIsLoading(false);
                         return;

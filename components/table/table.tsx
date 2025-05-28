@@ -14,7 +14,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { openModal } from '@/lib/store/features/modalSlice';
 import { setCampaigns } from '@/lib/store/features/campaignSlice';
 
-export function Table({ config }: { config: ITableConfig }) {
+interface TableProps {
+  config: ITableConfig;
+}
+
+export function Table({ config }: TableProps) {
   const dispatch = useDispatch();
   const {
     currentPage,
@@ -62,7 +66,6 @@ export function Table({ config }: { config: ITableConfig }) {
     try {
       const result = await action(item);
       if (result.showDialog) {
-        console.log("result:", result);
         dispatch(openModal({
           title: "Edit Campaign",
           contentType: "CampaignForm",

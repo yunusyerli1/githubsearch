@@ -36,8 +36,6 @@ export async function createCampaign(previousState: any, formData: FormData): Pr
 }
 
 export async function updateCampaign(previousState: any, formData: FormData) {
-  console.log("formData", formData);
-  console.log("previousState", previousState);
   const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     if (!title || !description) {
@@ -48,7 +46,6 @@ export async function updateCampaign(previousState: any, formData: FormData) {
       title,
       description
     };
-    console.log("updatedCampaign", updatedCampaign);
     await updateCampaignService(updatedCampaign);
     revalidatePath('/');
     return { message: "Campaign updated successfully!", campaign: updatedCampaign };
@@ -60,8 +57,6 @@ export async function editCampaign(item: any) {
     ...item,
     points: item.points.value ?? item.point
   };
-  console.log("Editing item:", newItem);
-  // Add your edit logic here
  
   return { newItem, showDialog: true };
 }

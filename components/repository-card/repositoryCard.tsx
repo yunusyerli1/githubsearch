@@ -2,11 +2,11 @@ import { IRepository } from '@/lib/models/IRepository';
 import { useRouter } from 'next/navigation';
 import classes from './repository-card.module.scss';
 
-interface RepositoryItemProps {
+interface RepositoryCardProps {
     repo: IRepository;
 }
 
-export default function RepositoryCard({ repo }: RepositoryItemProps) {
+export default function RepositoryCard({ repo }: RepositoryCardProps) {
     const router = useRouter();
 
     const handleRepositoryClick = (repo: IRepository) => {

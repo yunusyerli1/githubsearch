@@ -5,8 +5,6 @@ export default async function CreateCampaignsPage() {
 
   const campaigns = await getCampaigns();
 
-  //console.log(campaigns);
-
   return (
     <div className="container mt-5">
       <div className="card p-4 shadow-lg">

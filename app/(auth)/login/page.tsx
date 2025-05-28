@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   return (
     <div>
-      <h1>Logging In...</h1>
+      <h1>Register...</h1>
     </div>
   );
 }

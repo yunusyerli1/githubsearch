@@ -5,8 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import { setCurrentQuery, setError, setLoading } from "@/lib/store/features/searchSlice";
 
+interface SearchProps {
+    labelProp: string;
+}
 
-export default function Search({ labelProp }: { labelProp: string }) {
+export default function Search({ labelProp }: SearchProps) {
 
     const dispatch = useDispatch();
     const { currentQuery, isLoading, error } = useSelector((state: RootState) => state.search);

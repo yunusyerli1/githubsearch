@@ -6,7 +6,6 @@ import { getCampaigns } from "@/lib/services/campaign.db";
 // This is a Server Component that fetches data
 async function getTableData() {
   const campaignsData = await getCampaigns() as ICampaign[];
- // console.log("campaignsData:", campaignsData);
   return useTable(campaignsData);
 }
 

@@ -10,7 +10,11 @@ import DialogModal from "@/components/modal/dialogModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '@/lib/store/store';
 
-export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
+interface LayoutWrapperProps {
+  children: React.ReactNode;
+}
+
+export default function LayoutWrapper({ children }: LayoutWrapperProps) {
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 

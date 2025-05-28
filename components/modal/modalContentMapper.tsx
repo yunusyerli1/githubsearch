@@ -5,15 +5,17 @@ import CampaignForm from '../campaign-form/campaign-form';
 
 type ModalContentType = 'CampaignForm' | 'ConfirmationDialog' | 'OtherComponent';
 
+interface ModalContentProps {
+  contentType: ModalContentType;
+  contentProps: any;
+}
+
 const modalComponents = {
   CampaignForm,
   // Add other modal content components here
 };
 
-export function ModalContentMapper({ contentType, contentProps }: {
-  contentType: string;
-  contentProps: any;
-}) {
+export function ModalContentMapper({ contentType, contentProps }: ModalContentProps) {
   const Component = modalComponents[contentType as keyof typeof modalComponents];
   
   if (!Component) {
